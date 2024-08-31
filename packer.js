@@ -30,19 +30,16 @@ if (!fs.existsSync(destDir) || fs.readdirSync(destDir).length === 0) {
       );
 
       if (hasAllRequiredFiles) {
-        // Copy the files from uncompiled/FOLDER/audioconfig to compiled/audioconfig
         let srcStreamDir = path.join(srcDir, folder, "audioconfig");
         let destStreamDir = path.join(destDir, "audioconfig");
         fs.mkdirSync(destStreamDir, { recursive: true });
         copyFiles(srcStreamDir, destStreamDir);
 
-        // Copy .awc files from uncompiled/FOLDER/sfx to compiled/sfx/dlc_${folder}
         let srcDataDir = path.join(srcDir, folder, "sfx", `dlc_${folder}`);
         let destDataDir = path.join(destDir, "sfx", `dlc_${folder}`);
         fs.mkdirSync(destDataDir, { recursive: true });
         copyAWCFiles(srcDataDir, destDataDir);
 
-        // Add entries to fxmanifest.lua for this folder
         manifestContent += `
 data_file 'AUDIO_GAMEDATA' 'audioconfig/${folder}_game.dat'
 data_file 'AUDIO_SOUNDDATA' 'audioconfig/${folder}_sounds.dat'
@@ -51,7 +48,6 @@ data_file 'AUDIO_WAVEPACK' 'sfx/dlc_${folder}'
       }
     });
 
-    // Create fxmanifest.lua in the compiled directory with the final content
     let destManifest = path.join(destDir, "fxmanifest.lua");
 
     try {
